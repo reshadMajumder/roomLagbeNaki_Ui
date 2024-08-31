@@ -47,7 +47,7 @@ const Navbar = () => {
                 <ul className="flex-container ulmenu">
                   <li><Link to="/">Home</Link></li>
                   <li><Link to="/all-ads">Rooms</Link></li>
-                  <li><Link to="/post">Post Your Ad</Link></li>
+                  <li><Link to={userName ? "/post" : "/login"}>Post Your Ad</Link></li>
                 </ul>
               </div>
             </div>
