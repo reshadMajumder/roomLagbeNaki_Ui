@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import HomeScreen from './screens/HomeScreen';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import AllRoomsScreen from './screens/AllRooms';
+import PostAd from './screens/PostAd';
+import Login from './screens/Login';
+import Register from './screens/Register';
+
+
+// Import other components as needed
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
+    <Router>
+      <div className="wrapper">
+        {/* Navbar */}
+        <Navbar />
+
+        <Routes>
+          {/* Define your routes here */}
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/all-ads" element={<AllRoomsScreen />} />
+          <Route path="/post" element={<PostAd />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+        </Routes>
+        <Footer />
+
+        {/* Back To Top Button */}
+        <a href="#" className="back-to-top">
+          <i className="bx bxs-up-arrow-alt"></i>
         </a>
-      </header>
-    </div>
+      </div>
+    </Router>
   );
 }
 
