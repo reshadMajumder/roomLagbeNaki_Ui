@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import B_URL from '../Services/Api';
 
 const Login = () => {
   const [identifier, setIdentifier] = useState('');
@@ -13,7 +14,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login/', { identifier, password });
+      const response = await axios.post(`${B_URL}/api/login/`, { identifier, password });
 
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);

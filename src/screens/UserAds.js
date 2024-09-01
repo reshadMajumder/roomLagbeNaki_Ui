@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Modal, Form, Spinner, Alert, Card } from 'react-bootstrap';
-// import './UserAdsPage.css'; // Assuming you want to add custom styles
+import { Button, Modal, Form, Spinner, Alert } from 'react-bootstrap';
+import B_URL from '../Services/Api';
 
 const UserAdsPage = () => {
   const [ads, setAds] = useState([]);
@@ -9,7 +9,6 @@ const UserAdsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -21,7 +20,7 @@ const UserAdsPage = () => {
         }
 
         const userId = localStorage.getItem('userId');
-        const response = await axios.get(`http://127.0.0.1:8000/api/user/${userId}/ads/`, {
+        const response = await axios.get(`${B_URL}/api/user/${userId}/ads/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -38,15 +37,20 @@ const UserAdsPage = () => {
     fetchAds();
   }, []);
 
-  const handleViewAd = (ad) => {
+  const handleShowModal = (ad) => {
     setSelectedAd(ad);
     setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedAd(null);
+    setShowModal(false);
   };
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('access');
-      const response = await axios.put(`http://127.0.0.1:8000/api/user/ads/${selectedAd.id}/`, selectedAd, {
+      const response = await axios.put(`${B_URL}/api/user/ads/${selectedAd.id}/`, selectedAd, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -60,24 +64,18 @@ const UserAdsPage = () => {
   };
 
   const handleDelete = async (adId) => {
-    if (!deleteConfirm) {
-      setDeleteConfirm(true);
-      return;
-    }
-
     try {
       const token = localStorage.getItem('access');
-      await axios.delete(`http://127.0.0.1:8000/api/user/ads/${adId}/`, {
+      await axios.delete(`${B_URL}/api/user/ads/${adId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       setAds(ads.filter(ad => ad.id !== adId));
+      setShowModal(false);
     } catch (error) {
       console.error('Error deleting ad:', error);
       setError('Error deleting ad');
-    } finally {
-      setDeleteConfirm(false);
     }
   };
 
@@ -90,56 +88,50 @@ const UserAdsPage = () => {
   }
 
   return (
-    <div className="container mt-4">
-      <h2>Your Ads</h2>
+    <div className="container my-4">
+      <h1 className="text-center mb-4">Your Ads</h1>
       {ads.length === 0 ? (
         <p>No ads to display.</p>
       ) : (
-        <div className="product-grid">
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {ads.map(ad => (
-              <div className="col" key={ad.id}>
-                <Card className="h-100 shadow-sm">
-                  <div className="position-relative">
-                    {ad.images.length > 0 && (
-                      <Card.Img
-                        variant="top"
-                        src={`http://127.0.0.1:8000${ad.images[0].image}`}
-                        alt={ad.title}
-                        className="img-fluid zoom-in"
-                      />
-                    )}
-                  </div>
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="mb-2 text-center">{ad.title}</Card.Title>
-                    <Card.Text className="text-center text-muted">{ad.city}</Card.Text>
-                    <Card.Text className="text-center h6 text-danger">${ad.price}</Card.Text>
-                    <div className="mt-auto d-flex justify-content-center">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="me-2"
-                        onClick={() => handleViewAd(ad)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant={deleteConfirm ? 'danger' : 'outline-danger'}
-                        size="sm"
-                        onClick={() => handleDelete(ad.id)}
-                      >
-                        {deleteConfirm ? 'Confirm Delete' : 'Delete'}
-                      </Button>
+        <div className="row row-cols-2 row-cols-md-4 g-3 g-sm-4">
+          {ads.map(ad => (
+            <div className="col" key={ad.id}>
+              <div className="card h-100">
+                <div className="position-relative overflow-hidden" onClick={() => handleShowModal(ad)} style={{ cursor: 'pointer' }}>
+                  {ad.images && ad.images.length > 0 && (
+                    <img 
+                      src={`${B_URL}${ad.images[0].image}`} 
+                      className="img-fluid zoom-in" 
+                      alt={ad.title} 
+                    />
+                  )}
+                </div>
+                <div className="card-body px-0">
+                  <div className="d-flex align-items-center justify-content-center">
+                    <div className="">
+                      <h6 className="mb-0 fw-bold product-short-title">
+                        {ad.title}
+                      </h6>
                     </div>
-                  </Card.Body>
-                </Card>
+                  </div>
+                  <div className="product-price d-flex align-items-center justify-content-center gap-2 mt-2">
+                    <div className="h6 fw-bold text-danger">
+                      {ad.price} Tk
+                    </div>
+                  </div>
+                  <p className="text-center mt-2">{ad.city}</p>
+                  <div className="d-flex justify-content-around mt-3">
+                    <Button variant="primary" size="sm" onClick={() => handleShowModal(ad)}>Update</Button>
+                    <Button variant="danger" size="sm" onClick={() => handleDelete(ad.id)}>Delete</Button>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Ad</Modal.Title>
         </Modal.Header>
@@ -183,11 +175,14 @@ const UserAdsPage = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
           <Button variant="primary" onClick={handleSave}>
             Save Changes
+          </Button>
+          <Button variant="danger" onClick={() => handleDelete(selectedAd.id)}>
+            Delete Ad
           </Button>
         </Modal.Footer>
       </Modal>

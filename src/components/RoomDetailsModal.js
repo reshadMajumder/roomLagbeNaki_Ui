@@ -1,5 +1,7 @@
 import React from 'react';
 import { Modal, Button, Carousel } from 'react-bootstrap';
+import phoneIcon from './phoneIcon.png';
+import B_URL from '../Services/Api';
 
 const RoomDetailsModal = ({ room, show, handleClose }) => {
     if (!room) return null;
@@ -15,7 +17,7 @@ const RoomDetailsModal = ({ room, show, handleClose }) => {
                         <Carousel.Item key={index}>
                             <img
                                 className="d-block w-100"
-                                src={`http://127.0.0.1:8000${img.image}`}
+                                src={`${B_URL}${img.image}`}
                                 alt={`Slide ${index}`}
                             />
                         </Carousel.Item>
@@ -28,11 +30,12 @@ const RoomDetailsModal = ({ room, show, handleClose }) => {
                 <p><strong>Description:</strong> {room.description}</p>
                 <p><strong>Room Type  :</strong> {room.room_type}</p>
                 <p><strong>Phone      :</strong> {room.phone}
-                    <Button variant="outline-primary" className="ml-2 mx-2" onClick={() => window.location.href = `tel:${room.phone}`}>
-
-                        <i className="fas fa-phone"></i>
+                    <Button variant="link" className="ml-2 mx-2 p-0" onClick={() => window.location.href = `tel:${room.phone}`}>
+                        <img src={phoneIcon} alt="Phone Icon" style={{ width: '26px', height: '26px' }} />
                     </Button>
                 </p>
+                <p><strong>Date       :</strong> {new Date(room.date).toLocaleString()}</p>
+
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
