@@ -18,6 +18,7 @@ const Login = () => {
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
       localStorage.setItem('userName', response.data.user.username); // Ensure this matches
+      localStorage.setItem('userId', response.data.user.id); // Ensure this matches
 
 
       navigate('/'); // Redirect to dashboard or another page

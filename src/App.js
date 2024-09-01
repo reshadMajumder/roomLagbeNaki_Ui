@@ -8,6 +8,9 @@ import AllRoomsScreen from './screens/AllRooms';
 import PostAd from './screens/PostAd';
 import Login from './screens/Login';
 import Register from './screens/Register';
+import ProfilePage from './components/ProfilePage';
+import UserAdsPage from './components/UseAds';
+import UserProfilePage from './components/UserProfile';
 
 
 // Import other components as needed
@@ -26,6 +29,10 @@ function App() {
           <Route path="/post" element={<PostAd />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/user-ads" element={<UserAdsPage/>} />
+          <Route path="/profile" element={<UserProfilePage/>} />
+
 
         </Routes>
         <Footer />
