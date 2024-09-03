@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Form, Spinner, Alert } from 'react-bootstrap';
+import B_URL from "../Services/Api";
 
 const UserProfilePage = () => {
   const [userData, setUserData] = useState({
@@ -20,7 +21,7 @@ const UserProfilePage = () => {
           return;
         }
 
-        const response = await axios.get('http://127.0.0.1:8000/api/user/profile/', {
+        const response = await axios.get(`${B_URL}/api/user/profile/`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
