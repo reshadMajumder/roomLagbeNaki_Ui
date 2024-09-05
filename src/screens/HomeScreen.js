@@ -51,7 +51,7 @@ const HomeScreen = () => {
                                         <div className="row row-cols-2 row-cols-md-4 g-3 g-sm-4">
                                             {rooms.map(room => (
                                                 <div className="col" key={room.id}>
-                                                    <div className="card" onClick={() => handleShowModal(room)} style={{ cursor: 'pointer', height: '90%' }}>
+                                                    <div className="card" onClick={() => handleShowModal(room)} style={{ cursor: 'pointer', maxHeight: '90%' }}>
                                                         <div className="position-relative overflow-hidden">
                                                             {room.images.length > 0 && (
                                                                 <img
